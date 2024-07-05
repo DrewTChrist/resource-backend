@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
-    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev/"
+    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev"
 ]
 
 app = FastAPI()
