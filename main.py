@@ -14,8 +14,6 @@ origins = [
 
 app = FastAPI()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
