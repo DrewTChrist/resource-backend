@@ -9,6 +9,7 @@ from security import get_current_user, get_current_active_user
 
 origins = [
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
+    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev/login",
     "https://codespaces-blank-omega.vercel.app"
 ]
 
