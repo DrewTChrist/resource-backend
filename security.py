@@ -1,4 +1,4 @@
-import typing import Annotated
+from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from models import User
