@@ -7,3 +7,5 @@ class User(BaseModel):
     full_name: Union[str, None] = None
     disabled: Union[bool, None] = None
 
+class UserInDB(BaseModel):
+    hashed_password: str
