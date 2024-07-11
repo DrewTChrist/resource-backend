@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from resources import RESOURCES
 
 origins = [
-    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev"
+    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
+    "https://codespaces-blank-omega.vercel.app"
 ]
 
 app = FastAPI()
