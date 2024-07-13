@@ -34,6 +34,24 @@ async def get_current_active_user(
     return current_user
 
 
+async def verify_user(request: Request):
+    try:
+        token = request.headers.get("Authorization")
+        if not token or not token.startswith("Bearer "):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        token = token.split("Bearer ")[1]
+        get_current_user(str(token))
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error")
+
+
 class AuthStaticFiles(StaticFiles):
     def __init__(self, *args, **kwargs) -> None:
 
@@ -43,8 +61,7 @@ class AuthStaticFiles(StaticFiles):
 
         assert scope["type"] == "http"
 
-        # request = Request(scope, receive)
-        # await get_current_active_user(request)
-        await get_current_active_user(receive)
+        request = Request(scope, receive)
+        await verify_user(request)
         await super().__call__(scope, receive, send)
 
