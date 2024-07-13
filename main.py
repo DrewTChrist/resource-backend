@@ -63,7 +63,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 
 
 @app.get("/api/video")
-def read_video():
+def read_video(current_user: Annotated[models.User, Depends(get_current_active_user)]):
     def iter_file():
         with open(video_file, "rb") as file:
             yield from file
