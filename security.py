@@ -51,17 +51,18 @@ async def verify_user(request: Request):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error")
 
+# https://github.com/tiangolo/fastapi/discussions/7900
+# See here how to handle authentication of static files
+# class AuthStaticFiles(StaticFiles):
+#     def __init__(self, *args, **kwargs) -> None:
 
-class AuthStaticFiles(StaticFiles):
-    def __init__(self, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
 
-        super().__init__(*args, **kwargs)
+#     async def __call__(self, scope, receive, send) -> None:
 
-    async def __call__(self, scope, receive, send) -> None:
+#         assert scope["type"] == "http"
 
-        assert scope["type"] == "http"
-
-        request = Request(scope, receive)
-        await verify_user(request)
-        await super().__call__(scope, receive, send)
+#         request = Request(scope, receive)
+#         await verify_user(request)
+#         await super().__call__(scope, receive, send)
 

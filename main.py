@@ -1,12 +1,13 @@
 from typing import Union, Annotated
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.security import OAuth2PasswordRequestForm
-# from fastapi.staticfiles import StaticFiles
+from fastapi.staticfiles import StaticFiles
 import db
 import models
 from resources import RESOURCES
-from security import get_current_user, get_current_active_user, AuthStaticFiles
+from security import get_current_user, get_current_active_user
 
 origins = [
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
@@ -26,8 +27,9 @@ app.add_middleware(
 )
 
 # https://fastapi.tiangolo.com/advanced/custom-response/
-# app.mount("/static", StaticFiles(directory="assets"), name="static")
-app.mount("/static", AuthStaticFiles(directory="assets"), name="static")
+app.mount("/static", StaticFiles(directory="assets"), name="static")
+
+video_file = "ForBiggerEscapes.mp4"
 
 def fake_hash_password(password: str):
     return "fakehashed" + password
@@ -58,6 +60,14 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         raise HTTPException(status_code=400, detail="Incorrect username or password")
 
     return {"access_token": user.username, "token_type": "bearer"}
+
+
+@app.get("/api/video")
+def read_video():
+    def iter_file():
+        with open(video_file, "rb") as file:
+            yield from file
+    return StreamingResponse(iter_file(), media_type="video/mp4")
 
 
 @app.get("/api/users/me")
