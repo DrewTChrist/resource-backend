@@ -2,6 +2,7 @@ from typing import Union, Annotated
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 import db
 import models
 from resources import RESOURCES
@@ -24,6 +25,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/static", StaticFiles(directory="assets"), name="static")
+
 def fake_hash_password(password: str):
     return "fakehashed" + password
 
@@ -31,7 +34,6 @@ def fake_hash_password(password: str):
 def read_root():
     return {"Hello": "World"}
 
-# def read_resources():
 
 @app.get("/api/resources")
 async def read_resources(current_user: Annotated[models.User, Depends(get_current_active_user)]):
