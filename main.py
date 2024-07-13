@@ -9,9 +9,9 @@ from security import get_current_user, get_current_active_user
 
 origins = [
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
-    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev/login",
+    "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev/*",
     "https://codespaces-blank-omega.vercel.app",
-    "https://codespaces-blank-omega.vercel.app/login"
+    "https://codespaces-blank-omega.vercel.app/*"
 ]
 
 app = FastAPI()
@@ -31,9 +31,10 @@ def fake_hash_password(password: str):
 def read_root():
     return {"Hello": "World"}
 
+# def read_resources():
 
 @app.get("/api/resources")
-def read_resources():
+async def read_resources(current_user: Annotated[models.User, Depends(get_current_active_user)]):
     return RESOURCES
 
 
