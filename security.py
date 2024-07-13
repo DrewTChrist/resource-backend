@@ -41,9 +41,10 @@ class AuthStaticFiles(StaticFiles):
 
     async def __call__(self, scope, receive, send) -> None:
 
-        # assert scope["type"] == "http"
+        assert scope["type"] == "http"
 
-        request = Request(scope, receive)
-        await get_current_active_user(request)
+        # request = Request(scope, receive)
+        # await get_current_active_user(request)
+        await get_current_active_user(receive)
         await super().__call__(scope, receive, send)
 
