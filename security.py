@@ -1,6 +1,7 @@
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from db import get_user
 from models import User
@@ -31,3 +32,18 @@ async def get_current_active_user(
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+
+class AuthStaticFiles(StaticFiles):
+    def __init__(self, *args, **kwargs) -> None:
+
+        super().__init__(*args, **kwargs)
+
+    async def __call__(self, scope, receive, send) -> None:
+
+        # assert scope["type"] == "http"
+
+        request = Request(scope, receive)
+        await get_current_active_user(request)
+        await super().__call__(scope, receive, send)
+

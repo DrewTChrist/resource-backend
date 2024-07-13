@@ -1,12 +1,12 @@
 from typing import Union, Annotated
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.staticfiles import StaticFiles
+from fastapi.security import OAuth2PasswordRequestForm
+# from fastapi.staticfiles import StaticFiles
 import db
 import models
 from resources import RESOURCES
-from security import get_current_user, get_current_active_user
+from security import get_current_user, get_current_active_user, AuthStaticFiles
 
 origins = [
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
@@ -25,7 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="assets"), name="static")
+# https://fastapi.tiangolo.com/advanced/custom-response/
+# app.mount("/static", StaticFiles(directory="assets"), name="static")
+app.mount("/static", AuthStaticFiles(directory="assets"), name="static")
 
 def fake_hash_password(password: str):
     return "fakehashed" + password
