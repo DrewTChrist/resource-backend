@@ -48,7 +48,7 @@ def get_user(username: str):
         first_name=user[1],
         last_name=user[2],
         username=user[3],
-        password_hash=user[4],
+        hashed_password=user[4],
         disabled=user[5],
         administrator=user[6]
     )
