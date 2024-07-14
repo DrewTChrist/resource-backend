@@ -92,7 +92,7 @@ async def create_user(
     #     disabled=user_dict["disabled"],
     #     admin=user_dict["admin"]
     # )
-    db.create_user(user)
+    db.create_user(new_user)
     return new_user
 
 
