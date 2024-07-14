@@ -44,7 +44,14 @@ def get_user(username: str):
     user = cursor.fetchone()
     cursor.close()
     CONNECTION_POOL.putconn(connection)
-    return UserInDB(**user)
+    return UserInDB(
+        first_name=user[1],
+        last_name=user[2],
+        username=user[3],
+        password_hash=user[4],
+        disabled=user[5],
+        administrator=user[6]
+    )
 
 # def get_user(username: str):
 #     if username in db:
