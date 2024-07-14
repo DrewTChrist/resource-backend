@@ -81,7 +81,7 @@ async def read_users_me(
 
 @app.post("/api/users/create/")
 async def create_user(
-    current_user: Annotated[models.User, Depends(security.get_current_admin_user)]
+    current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
     new_user
 ):
     user_dict = new_user.dict()
