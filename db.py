@@ -26,7 +26,7 @@ def get_user(username: str):
         admin=user[6]
     )
 
-def create_user(user: models.User, password: str):
+def create_user(user: models.NewUser):
     connection = CONNECTION_POOL.getconn()
     cursor = connection.cursor()
     cursor.execute(
@@ -35,7 +35,7 @@ def create_user(user: models.User, password: str):
             user.first_name, # first_name
             user.last_name, # last_name
             user.username, # username
-            get_password_hash(password), # password
+            get_password_hash(user.password), # password
             user.disabled, # disabled
             user.admin # admin
         )
