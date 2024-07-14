@@ -21,7 +21,7 @@ RESOURCES = {
             {"id": 18, "title": "title 18"},
             {"id": 19, "title": "title 19"},
             {"id": 20, "title": "title 20"},
-        ], 
+        ],
         [
             {"id": 21, "title": "title 21"},
             {"id": 22, "title": "title 22"},
@@ -87,6 +87,6 @@ RESOURCES = {
             {"id": 78, "title": "title 78"},
             {"id": 79, "title": "title 79"},
             {"id": 80, "title": "title 80"},
-        ]
+        ],
     ]
 }

@@ -1,4 +1,5 @@
 from typing import Union, Annotated
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -7,13 +8,13 @@ from fastapi.staticfiles import StaticFiles
 import db
 import models
 from resources import RESOURCES
-from security import get_current_user, get_current_active_user
+import security
 
 origins = [
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev",
     "https://sturdy-xylophone-4jvrqw47qv7fjxgw-5173.app.github.dev/*",
     "https://codespaces-blank-omega.vercel.app",
-    "https://codespaces-blank-omega.vercel.app/*"
+    "https://codespaces-blank-omega.vercel.app/*",
 ]
 
 app = FastAPI()
@@ -31,8 +32,10 @@ app.mount("/static", StaticFiles(directory="assets"), name="static")
 
 video_file = "ForBiggerEscapes.mp4"
 
+
 def fake_hash_password(password: str):
     return "fakehashed" + password
+
 
 @app.get("/")
 def read_root():
@@ -40,7 +43,9 @@ def read_root():
 
 
 @app.get("/api/resources")
-async def read_resources(current_user: Annotated[models.User, Depends(get_current_active_user)]):
+async def read_resources(
+    current_user: Annotated[models.User, Depends(security.get_current_active_user)]
+):
     return RESOURCES
 
 
@@ -50,31 +55,45 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 
 @app.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user_dict = db.fake_users_db.get(form_data.username)
-    if not user_dict:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    user = models.UserInDB(**user_dict)
-    hashed_password = fake_hash_password(form_data.password)
-    if not hashed_password == user.hashed_password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> models.Token:
+    user = security.authenticate_user(form_date.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    return {"access_token": user.username, "token_type": "bearer"}
+    access_token_expires = timedelta(minutes=security.ACCESS_TOKEN_EXPIRE_MINUTES)
+    acess_token = security.create_access_token(
+        data={"sub": user.username}, 
+        expires_delta=access_token_expires
+    )
+
+    return models.Token(acess_token=access_token, token_type="bearer")
 
 
-@app.get("/api/video")
-def read_video():
+@app.get("/api/resource/{content_id}")
+def read_resource(
+    resource_id: int,
+    current_user: Annotated[models.User, Depends(security.get_current_active_user)],
+):
     def iter_file():
         with open(video_file, "rb") as file:
             yield from file
+
     return StreamingResponse(iter_file(), media_type="video/mp4")
 
 
 @app.get("/api/users/me")
-async def read_users_me(current_user: Annotated[models.User, Depends(get_current_active_user)]):
+async def read_users_me(
+    current_user: Annotated[models.User, Depends(security.get_current_active_user)]
+):
     return current_user
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    load_dotenv()
     import uvicorn
+
     uvicorn.run(app)
