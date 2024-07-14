@@ -71,7 +71,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> m
         expires_delta=access_token_expires
     )
 
-    return models.Token(acess_token=access_token, token_type="bearer")
+    return models.Token(access_token=access_token, token_type="bearer")
 
 
 @app.get("/api/resource/{content_id}")
