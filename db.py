@@ -2,10 +2,10 @@ import os
 from models import UserInDB
 from psycopg2 import pool
 from dotenv import load_dotenv
+
 load_dotenv()
 
 CONNECTION_STRING = os.getenv("DATABASE_URL")
-print(CONNECTION_STRING)
 
 CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
 
@@ -50,7 +50,7 @@ def get_user(username: str):
         username=user[3],
         hashed_password=user[4],
         disabled=user[5],
-        administrator=user[6]
+        admin=user[6]
     )
 
 # def get_user(username: str):
