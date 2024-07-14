@@ -24,7 +24,14 @@ def create_user():
     cursor = connection.cursor()
     cursor.execute(
         "INSERT INTO users (first_name, last_name, username, password_hash, disabled, administrator) VALUES (%s, %s, %s, %s, %s, %s)", 
-        ("Fart", "Wahlberg", "johndoe", get_password_hash("secret"), False, True)
+        (
+            "Fart", # first_name
+            "Wahlberg", # last_name
+            "johndoe", # username
+            get_password_hash("secret"), # password
+            False, # disabled
+            True # admin
+        )
     )
     connection.commit()
     cursor.close()

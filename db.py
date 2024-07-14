@@ -1,40 +1,13 @@
 import os
-from models import UserInDB
 from psycopg2 import pool
 from dotenv import load_dotenv
+import models
 
 load_dotenv()
 
 CONNECTION_STRING = os.getenv("DATABASE_URL")
 
 CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
-        "disabled": False,
-        "admin": True,
-    },
-    "alice": {
-        "username": "alice",
-        "full_name": "Alice Wonderson",
-        "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
-        "disabled": True,
-        "admin": False,
-    },
-    "roberto": {
-        "username": "roberto",
-        "full_name": "Roberto Garcia",
-        "email": "roberto@example.com",
-        "hashed_password": "fakehashedsecret3",
-        "disabled": False,
-        "admin": True,
-    },
-}
 
 
 def get_user(username: str):
@@ -44,7 +17,7 @@ def get_user(username: str):
     user = cursor.fetchone()
     cursor.close()
     CONNECTION_POOL.putconn(connection)
-    return UserInDB(
+    return models.UserInDB(
         first_name=user[1],
         last_name=user[2],
         username=user[3],
@@ -53,7 +26,20 @@ def get_user(username: str):
         admin=user[6]
     )
 
-# def get_user(username: str):
-#     if username in db:
-#         user_dict = fake_users_db[username]
-#         return UserInDB(**user_dict)
+def create_user(user: models.User, password: str):
+    connection = CONNECTION_POOL.getconn()
+    cursor = connection.cursor()
+    cursor.execute(
+        "INSERT INTO users (first_name, last_name, username, password_hash, disabled, administrator) VALUES (%s, %s, %s, %s, %s, %s)", 
+        (
+            user.first_name, # first_name
+            user.last_name, # last_name
+            user.username, # username
+            get_password_hash(password), # password
+            user.disabled, # disabled
+            user.admin # admin
+        )
+    )
+    connection.commit()
+    cursor.close()
+    CONNECTION_POOL.putconn(connection)

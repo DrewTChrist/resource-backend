@@ -52,12 +52,6 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     return encoded_jwt
 
 
-def _fake_decode_token(token):
-    return User(
-        username=token + "fakedecode", email="johndoe@example.com", full_name="John Doe"
-    )
-
-
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -85,6 +79,13 @@ async def get_current_active_user(
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
+
+async def get_current_admin_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    if not current_user.admin:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    return current_user
 
 # async def verify_user(request: Request):
 #     try:

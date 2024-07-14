@@ -34,25 +34,11 @@ app.mount("/static", StaticFiles(directory="assets"), name="static")
 video_file = "ForBiggerEscapes.mp4"
 
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
 @app.get("/api/resources")
 async def read_resources(
     current_user: Annotated[models.User, Depends(security.get_current_active_user)]
 ):
     return RESOURCES
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
 
 
 @app.post("/token")
@@ -90,6 +76,23 @@ def read_resource(
 async def read_users_me(
     current_user: Annotated[models.User, Depends(security.get_current_active_user)]
 ):
+    return current_user
+
+
+@app.post("/api/users/create/")
+async def create_user(
+    current_user: Annotated[models.User, Depends(security.get_current_admin_user)]
+    new_user
+):
+    user_dict = new_user.dict()
+    user = models.User(
+        first_name=user_dict["first_name"],
+        last_name=user_dict["last_name"],
+        username=user_dict["username"],
+        disabled=user_dict["disabled"],
+        admin=user_dict["admin"]
+    )
+    db.create_user(user, user_dict["password"])
     return current_user
 
 
