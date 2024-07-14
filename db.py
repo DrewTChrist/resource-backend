@@ -2,7 +2,7 @@ import os
 from psycopg2 import pool
 from dotenv import load_dotenv
 import models
-import security
+import hashing
 
 load_dotenv()
 
@@ -36,7 +36,7 @@ def create_user(user: models.NewUser):
             user.first_name, # first_name
             user.last_name, # last_name
             user.username, # username
-            security.get_password_hash(user.password), # password
+            hashing.get_password_hash(user.password), # password
             user.disabled, # disabled
             user.admin # admin
         )

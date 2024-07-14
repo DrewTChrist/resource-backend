@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Union, Annotated
 
-import bcrypt
+# import bcrypt
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from db import get_user
 from models import User, TokenData
+import hashing
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -20,23 +21,11 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-def verify_password(plain_password, hashed_password):
-    password_byte_enc = plain_password.encode("utf-8")
-    hash_password_bytes = hashed_password.encode("utf-8")
-    return bcrypt.checkpw(password=password_byte_enc, hashed_password=hash_password_bytes)
-
-
-def get_password_hash(password):
-    pwd_bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
-    return hashed_password
-
 def authenticate_user(username: str, password: str):
     user = get_user(username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not hashing.verify_password(password, user.hashed_password):
         return False
     return user
 
