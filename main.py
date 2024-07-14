@@ -56,7 +56,7 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 @app.post("/token")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> models.Token:
-    user = security.authenticate_user(form_date.username, form_data.password)
+    user = security.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
