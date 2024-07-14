@@ -22,7 +22,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def verify_password(plain_password, hashed_password):
     password_byte_enc = plain_password.encode("utf-8")
-    return bcrypt.checkpw(password=password_byte_enc, hashed_password=hashed_password)
+    hash_password_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password=password_byte_enc, hashed_password=hash_password_bytes)
 
 
 def get_password_hash(password):
