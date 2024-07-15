@@ -84,14 +84,6 @@ async def create_user(
     current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
     new_user: models.NewUser
 ):
-    # user_dict = new_user.dict()
-    # user = models.User(
-    #     first_name=user_dict["first_name"],
-    #     last_name=user_dict["last_name"],
-    #     username=user_dict["username"],
-    #     disabled=user_dict["disabled"],
-    #     admin=user_dict["admin"]
-    # )
     db.create_user(new_user)
     return new_user
 
