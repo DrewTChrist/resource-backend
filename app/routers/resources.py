@@ -5,10 +5,7 @@ from ..dependencies import db, models, security
 from ..dependencies.resources import RESOURCES
 
 router = APIRouter(
-    prefix="/api/resources",
-    tags=['resources'],
-    dependencies=[],
-    responses={}
+    prefix="/api/resources", tags=["resources"], dependencies=[], responses={}
 )
 
 

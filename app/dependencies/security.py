@@ -12,7 +12,7 @@ from . import models
 from . import hashing
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 SECRET_KEY = "46ae5877585e3b43e1e4ae5bc048396cc19fb7413ec5a71044eef7716a49f9c9"
 ALGORITHM = "HS256"

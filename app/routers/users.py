@@ -2,12 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from ..dependencies import db, models, security
 
-router = APIRouter(
-    prefix="/api/users",
-    tags=['users'],
-    dependencies=[],
-    responses={}
-)
+router = APIRouter(prefix="/api/users", tags=["users"], dependencies=[], responses={})
 
 
 @router.get("/me")
