@@ -31,8 +31,6 @@ app.add_middleware(
 # https://fastapi.tiangolo.com/advanced/custom-response/
 app.mount("/static", StaticFiles(directory="assets"), name="static")
 
-video_file = "ForBiggerEscapes.mp4"
-
 
 @app.get("/api/resources")
 async def read_resources(
@@ -59,17 +57,18 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> m
 
     return models.Token(access_token=access_token, token_type="bearer")
 
+def iter_file(file_name: str):
+    with open(file_name, "rb") as file:
+        yield from file
 
 @app.get("/api/resource/{content_id}")
 def read_resource(
     resource_id: int,
     current_user: Annotated[models.User, Depends(security.get_current_active_user)],
 ):
-    def iter_file():
-        with open(video_file, "rb") as file:
-            yield from file
-
-    return StreamingResponse(iter_file(), media_type="video/mp4")
+    # here find resource in db and get path on disk
+    file_name = ""
+    return StreamingResponse(iter_file(file_name), media_type="video/mp4")
 
 
 @app.get("/api/users/me")
