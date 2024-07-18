@@ -6,9 +6,9 @@ from . import hashing
 
 load_dotenv()
 
-# CONNECTION_STRING = os.getenv("DATABASE_URL")
+CONNECTION_STRING = os.getenv("DATABASE_URL")
 
-# CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
+CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
 
 
 def get_user(username: str):
