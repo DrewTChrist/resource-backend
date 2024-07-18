@@ -53,7 +53,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = models.TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(token_data.username)
+    user = db.get_user(token_data.username)
     if not user:
         raise credentials_exception
     return user
