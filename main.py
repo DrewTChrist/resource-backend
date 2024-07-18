@@ -17,8 +17,8 @@ origins = [
 
 app = FastAPI()
 
-app.include_routers(users.router)
-app.include_routers(resources.router)
+app.include_router(users.router)
+app.include_router(resources.router)
 
 app.add_middleware(
     CORSMiddleware,
