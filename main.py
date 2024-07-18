@@ -1,11 +1,6 @@
-from datetime import timedelta
-from typing import Union, Annotated
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-
-from app.dependencies import models, security
 from app.routers import users, resources, auth
 
 origins = [
@@ -28,9 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# https://fastapi.tiangolo.com/advanced/custom-response/
-# app.mount("/static", StaticFiles(directory="assets"), name="static")
 
 
 if __name__ == "__main__":
