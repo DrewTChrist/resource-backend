@@ -1,4 +1,3 @@
-
 # Resource
 # --------
 # id unique integer
@@ -8,13 +7,12 @@
 
 # Metadata
 # --------
-# id unique integer 
+# id unique integer
 # resource_id integer foreign key
 # metadata_type metadata type
 
 # Metadata Types
 # --------------
-
 
 
 # import sys
@@ -39,7 +37,7 @@ def get_file_list(directory: str) -> list[ResourceFile]:
         resource = ResourceFile(
             file_name=file.name,
             full_path=str(file.absolute()),
-            size=file.lstat().st_size
+            size=file.lstat().st_size,
         )
         resources.append(resource)
     return resources

@@ -1,17 +1,15 @@
 from datetime import datetime, timedelta, timezone
 from typing import Union, Annotated
 
-# import bcrypt
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 import jwt
 from jwt.exceptions import InvalidTokenError
-from pydantic import BaseModel
 
-from db import get_user
-from models import User, TokenData
-import hashing
+from . import db
+from . import models
+from . import hashing
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -22,7 +20,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 def authenticate_user(username: str, password: str):
-    user = get_user(username)
+    user = db.get_user(username)
     if not user:
         return False
     if not hashing.verify_password(password, user.hashed_password):
@@ -52,7 +50,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = models.TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
     user = get_user(token_data.username)
@@ -62,7 +60,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 
 async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[models.User, Depends(get_current_user)],
 ):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
@@ -70,11 +68,12 @@ async def get_current_active_user(
 
 
 async def get_current_admin_user(
-    current_user: Annotated[User, Depends(get_current_user)],
+    current_user: Annotated[models.User, Depends(get_current_user)],
 ):
     if not current_user.admin:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
     return current_user
+
 
 # async def verify_user(request: Request):
 #     try:

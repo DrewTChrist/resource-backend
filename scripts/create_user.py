@@ -23,18 +23,19 @@ def create_user():
     connection = psycopg2.connect(CONNECTION_STRING)
     cursor = connection.cursor()
     cursor.execute(
-        "INSERT INTO users (first_name, last_name, username, password_hash, disabled, administrator) VALUES (%s, %s, %s, %s, %s, %s)", 
+        "INSERT INTO users (first_name, last_name, username, password_hash, disabled, administrator) VALUES (%s, %s, %s, %s, %s, %s)",
         (
-            "Fart", # first_name
-            "Wahlberg", # last_name
-            "johndoe", # username
-            get_password_hash("secret"), # password
-            False, # disabled
-            True # admin
-        )
+            "Fart",  # first_name
+            "Wahlberg",  # last_name
+            "johndoe",  # username
+            get_password_hash("secret"),  # password
+            False,  # disabled
+            True,  # admin
+        ),
     )
     connection.commit()
     cursor.close()
     connection.close()
+
 
 create_user()
