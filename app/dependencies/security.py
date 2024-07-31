@@ -2,20 +2,18 @@ from datetime import datetime, timedelta, timezone
 import os
 from typing import Union, Annotated
 
-from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 import jwt
 from jwt.exceptions import InvalidTokenError
 
+from . import configuration
 from . import db
 from . import models
 from . import hashing
 
-load_dotenv()
-
-SECRET_KEY = os.getenv("SIGNATURE")
+SECRET_KEY = configuration.get_config().jwt_signature
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

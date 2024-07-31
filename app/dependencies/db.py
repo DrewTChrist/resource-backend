@@ -1,12 +1,11 @@
 import os
 from psycopg2 import pool
-from dotenv import load_dotenv
+
+from . import configuration
 from . import models
 from . import hashing
 
-load_dotenv()
-
-CONNECTION_STRING = os.getenv("DATABASE_URL")
+CONNECTION_STRING = configuration.get_config().db_url
 
 CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
 
