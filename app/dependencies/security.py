@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, timezone
+import os
 from typing import Union, Annotated
 
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
@@ -11,12 +13,13 @@ from . import db
 from . import models
 from . import hashing
 
+load_dotenv()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
-
-SECRET_KEY = "46ae5877585e3b43e1e4ae5bc048396cc19fb7413ec5a71044eef7716a49f9c9"
+SECRET_KEY = os.getenv("SIGNATURE")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
 def authenticate_user(username: str, password: str):
