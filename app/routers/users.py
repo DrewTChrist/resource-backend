@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
-from ..dependencies import db, models, security
+from ..internal import db, models
+from ..dependencies import security
 
 router = APIRouter(prefix="/api/users", tags=["users"], dependencies=[], responses={})
 

@@ -8,10 +8,10 @@ from fastapi.staticfiles import StaticFiles
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from . import configuration
-from . import db
-from . import models
-from . import hashing
+from ..internal import configuration
+from ..internal import db
+from ..internal import models
+from ..internal import hashing
 
 SECRET_KEY = configuration.get_config().jwt_signature
 ALGORITHM = "HS256"
