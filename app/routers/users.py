@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
+
 from app.internal.db import users
 from app.internal import models
 from app.dependencies import security
@@ -14,10 +15,7 @@ async def read_users_me(
     return current_user
 
 
-@router.post("/create")
-async def create_user(
-    current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
-    new_user: models.NewUser,
-):
+@router.post("/create", dependencies=[Depends(security.get_current_admin_user)])
+async def create_user(new_user: models.NewUser):
     users.create_user(new_user)
     return new_user

@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta, timezone
-import os
 from typing import Union, Annotated
 
-from fastapi import Depends, HTTPException, status, Request
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from fastapi.staticfiles import StaticFiles
 import jwt
 from jwt.exceptions import InvalidTokenError
 
@@ -20,12 +18,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
-def authenticate_user(username: str, password: str):
+def authenticate_user(username: str, password: str) -> Union[models.UserInDB, None]:
     user = users.get_user(username)
     if not user:
-        return False
+        return None
     if not hashing.verify_password(password, user.hashed_password):
-        return False
+        return None
     return user
 
 
@@ -52,8 +50,8 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         if username is None:
             raise credentials_exception
         token_data = models.TokenData(username=username)
-    except InvalidTokenError:
-        raise credentials_exception
+    except InvalidTokenError as token_err:
+        raise credentials_exception from token_err
     user = users.get_user(token_data.username)
     if not user:
         raise credentials_exception
@@ -91,7 +89,11 @@ async def get_current_admin_user(
 #     except HTTPException as e:
 #         raise e
 #     except Exception as e:
-#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Internal Server Error")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=f"Internal Server Error",
+#         )
+
 
 # https://github.com/tiangolo/fastapi/discussions/7900
 # See here how to handle authentication of static files

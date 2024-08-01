@@ -1,12 +1,13 @@
-from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from app.internal import models
 from app.dependencies import security
 from app.internal.resources import RESOURCES
 
 router = APIRouter(
-    prefix="/api/resources", tags=["resources"], dependencies=[], responses={}
+    prefix="/api/resources",
+    tags=["resources"],
+    dependencies=[Depends(security.get_current_active_user)],
+    responses={},
 )
 
 
@@ -16,17 +17,13 @@ def iter_file(file_name: str):
 
 
 @router.get("/")
-async def read_resources(
-    current_user: Annotated[models.User, Depends(security.get_current_active_user)]
-):
+async def read_resources():
     return RESOURCES
 
 
 @router.get("/{resource_id}")
-def read_resource(
-    resource_id: int,
-    current_user: Annotated[models.User, Depends(security.get_current_active_user)],
-):
+def read_resource(resource_id: int):
     # here find resource in db and get path on disk
+    _ = resource_id
     file_name = ""
     return StreamingResponse(iter_file(file_name), media_type="video/mp4")
