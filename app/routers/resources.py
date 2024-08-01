@@ -1,9 +1,9 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from ..internal import db, models
-from ..dependencies import security
-from ..internal.resources import RESOURCES
+from app.internal import models
+from app.dependencies import security
+from app.internal.resources import RESOURCES
 
 router = APIRouter(
     prefix="/api/resources", tags=["resources"], dependencies=[], responses={}

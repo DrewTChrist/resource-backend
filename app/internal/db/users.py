@@ -1,22 +1,17 @@
-import os
-from psycopg2 import pool
-
-from . import configuration
-from . import models
-from . import hashing
-
-CONNECTION_STRING = configuration.get_config().db_url
-
-CONNECTION_POOL = pool.SimpleConnectionPool(1, 10, CONNECTION_STRING)
+from app.internal.db import get_connection_pool
+from app.internal import configuration
+from app.internal import models
+from app.internal import hashing
 
 
 def get_user(username: str):
-    connection = CONNECTION_POOL.getconn()
+    pool = get_connection_pool()
+    connection = pool.getconn()
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
     cursor.close()
-    CONNECTION_POOL.putconn(connection)
+    pool.putconn(connection)
     return models.UserInDB(
         first_name=user[1],
         last_name=user[2],
@@ -28,7 +23,8 @@ def get_user(username: str):
 
 
 def create_user(user: models.NewUser):
-    connection = CONNECTION_POOL.getconn()
+    pool = get_connection_pool()
+    connection = pool.getconn()
     cursor = connection.cursor()
     cursor.execute(
         "INSERT INTO users (first_name, last_name, username, password_hash, disabled, administrator) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -43,4 +39,4 @@ def create_user(user: models.NewUser):
     )
     connection.commit()
     cursor.close()
-    CONNECTION_POOL.putconn(connection)
+    pool.putconn(connection)

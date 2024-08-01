@@ -2,8 +2,8 @@ from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from ..internal import db, models
-from ..dependencies import security
+from app.internal import models
+from app.dependencies import security
 
 router = APIRouter(prefix="/api/auth", tags=["auth"], dependencies=[], responses={})
 

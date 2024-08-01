@@ -8,10 +8,10 @@ from fastapi.staticfiles import StaticFiles
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..internal import configuration
-from ..internal import db
-from ..internal import models
-from ..internal import hashing
+from app.internal import configuration
+from app.internal.db import users
+from app.internal import models
+from app.internal import hashing
 
 SECRET_KEY = configuration.get_config().jwt_signature
 ALGORITHM = "HS256"
@@ -21,7 +21,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
 def authenticate_user(username: str, password: str):
-    user = db.get_user(username)
+    user = users.get_user(username)
     if not user:
         return False
     if not hashing.verify_password(password, user.hashed_password):
@@ -54,7 +54,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = models.TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = db.get_user(token_data.username)
+    user = users.get_user(token_data.username)
     if not user:
         raise credentials_exception
     return user
