@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api/users", tags=["users"], dependencies=[], respons
 
 @router.get("/me")
 async def read_users_me(
-    current_user: Annotated[models.User, Depends(security.get_current_active_user)]
+    current_user: Annotated[models.User, Depends(security.get_current_user)]
 ):
     return current_user
 
