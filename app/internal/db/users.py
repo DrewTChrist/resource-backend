@@ -5,6 +5,24 @@ from app.internal import models
 from app.internal import hashing
 
 
+def get_users() -> list[models.User]:
+    pool = get_connection_pool()
+    connection = pool.getconn()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM users;")
+    users = cursor.fetchall()
+    for user in users:
+        user = models.User(
+            first_name="",
+            last_name="",
+            username=user[2],
+            # password [3]
+            disabled=user[4],
+            admin=user[5]
+        )
+    return users
+
+
 def get_user(username: str) -> Union[models.UserInDB, None]:
     pool = get_connection_pool()
     connection = pool.getconn()

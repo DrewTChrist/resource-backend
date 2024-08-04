@@ -7,6 +7,11 @@ from app.dependencies import security
 
 router = APIRouter(prefix="/api/users", tags=["users"], dependencies=[], responses={})
 
+@router.get("/", dependencies=[Depends(security.get_current_admin_user)])
+async def get_users() -> list[models.User]:
+    users = users.get_users()
+    return users
+
 
 @router.get("/me")
 async def read_users_me(
