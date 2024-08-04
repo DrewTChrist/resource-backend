@@ -15,10 +15,10 @@ def get_users() -> list[models.User]:
         user = models.User(
             first_name="",
             last_name="",
-            username=user[2],
+            username=user[3],
             # password [3]
-            disabled=user[4],
-            admin=user[5]
+            disabled=user[5],
+            admin=user[6]
         )
     return users
 
