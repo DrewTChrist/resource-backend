@@ -10,17 +10,22 @@ def get_users() -> list[models.User]:
     connection = pool.getconn()
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM users;")
-    users = cursor.fetchall()
-    for user in users:
-        user = models.User(
-            first_name="",
-            last_name="",
-            username=user[3],
-            # password [3]
-            disabled=user[5],
-            admin=user[6]
+    user_list = cursor.fetchall()
+    return_users = []
+    cursor.close()
+    pool.putconn(connection)
+    for user in user_list:
+        return_users.append(
+            models.User(
+                first_name="",
+                last_name="",
+                username=user[3],
+                # password [3]
+                disabled=user[5],
+                admin=user[6],
+            )
         )
-    return users
+    return return_users
 
 
 def get_user(username: str) -> Union[models.UserInDB, None]:
