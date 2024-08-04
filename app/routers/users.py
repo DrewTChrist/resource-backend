@@ -9,8 +9,8 @@ router = APIRouter(prefix="/api/users", tags=["users"], dependencies=[], respons
 
 @router.get("/", dependencies=[Depends(security.get_current_admin_user)])
 async def get_users() -> list[models.User]:
-    users = users.get_users()
-    return users
+    user_list = users.get_users()
+    return user_list
 
 
 @router.get("/me")
