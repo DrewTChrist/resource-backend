@@ -26,3 +26,9 @@ class UserInDB(User):
 
 class NewUser(User):
     password: str
+
+
+class Resource(BaseModel):
+    resource_id: int
+    name: str
+    path: str
