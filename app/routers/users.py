@@ -21,7 +21,9 @@ async def read_users_me(
     return current_user
 
 
-@router.post("/create", dependencies=[Depends(security.get_current_admin_user)])
+@router.post(
+    "/create", dependencies=[Depends(security.get_current_admin_user)], status_code=201
+)
 async def create_user(new_user: models.NewUser):
     users.create_user(new_user)
     return new_user
