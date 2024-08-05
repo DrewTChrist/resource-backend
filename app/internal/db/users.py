@@ -17,10 +17,11 @@ def get_users() -> list[models.User]:
     for user in user_list:
         return_users.append(
             models.User(
-                first_name="",
-                last_name="",
+                user_id=user[0],
+                first_name=user[1],
+                last_name=user[2],
                 username=user[3],
-                # password [3]
+                # password [4]
                 disabled=user[5],
                 admin=user[6],
             )
@@ -39,6 +40,7 @@ def get_user(username: str) -> Union[models.UserInDB, None]:
     if not user:
         return None
     return models.UserInDB(
+        user_id=user[0],
         first_name=user[1],
         last_name=user[2],
         username=user[3],
