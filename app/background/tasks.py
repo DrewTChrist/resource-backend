@@ -8,10 +8,8 @@ from app.internal import configuration
 
 
 celery_instance = Celery(__name__)
-celery_instance.conf.broker_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
-celery_instance.conf.result_backend = os.environ.get(
-    "CELERY_RESULT_BACKEND", "redis://localhost:6379"
-)
+celery_instance.conf.broker_url = configuration.get_config().celery_broker_url
+celery_instance.conf.result_backend = configuration.get_config().celery_result_backend
 
 
 @dataclass
