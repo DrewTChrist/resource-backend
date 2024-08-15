@@ -4,6 +4,7 @@ from typing import BinaryIO
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 
+from app.background import tasks
 from app.internal.db import resources
 from app.internal import models
 from app.dependencies import security
@@ -19,6 +20,12 @@ router = APIRouter(
 def iter_file(file_name: str):
     with open(file_name, "rb") as file:
         yield from file
+
+
+@router.get("/reindex")
+def reindex():
+    task = tasks.index_files.delay()
+    return {"task_id": task.id}
 
 
 @router.get("/")
