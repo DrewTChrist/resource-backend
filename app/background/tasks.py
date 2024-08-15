@@ -7,9 +7,9 @@ from celery import Celery
 from app.internal import configuration
 
 
-celery = Celery(__name__)
-celery.conf.broker_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
-celery.conf.result_backend = os.environ.get(
+celery_instance = Celery(__name__)
+celery_instance.conf.broker_url = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
+celery_instance.conf.result_backend = os.environ.get(
     "CELERY_RESULT_BACKEND", "redis://localhost:6379"
 )
 
@@ -36,7 +36,7 @@ def get_file_list(directory: str) -> list[ResourceFile]:
     return resources
 
 
-@celery.task(name="index_files")
+@celery_instance.task(name="index_files")
 def index_files():
     # directory = configuration.get_config().resource_directory
     # file_list = get_file_list(directory)
