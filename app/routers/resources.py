@@ -1,6 +1,7 @@
 import os
 from typing import BinaryIO
 
+import celery
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 
@@ -22,9 +23,12 @@ def iter_file(file_name: str):
         yield from file
 
 
-@router.get("/reindex")
+@router.post("/reindex")
 def reindex():
-    task = tasks.index_files.delay()
+    try:
+        task = tasks.index_files.delay()
+    except celery.exceptions.OperationalError as e:
+        raise HTTPException(status_code=500, detail="Message queue unavailable") from e
     return {"task_id": task.id}
 
 
