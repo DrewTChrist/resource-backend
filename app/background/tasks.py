@@ -23,14 +23,15 @@ def get_file_list(directory: str) -> list[ResourceFile]:
     path = pathlib.Path(directory)
     resources = []
     for file in path.iterdir():
-        # should find way to calculate
-        # length of mp4
-        resource = ResourceFile(
-            file_name=file.name,
-            full_path=str(file.absolute()),
-            size=file.lstat().st_size,
-        )
-        resources.append(resource)
+        if file.is_dir():
+            [resources.append(f) for f in get_file_list(file)]
+        else:
+            resource = ResourceFile(
+                file_name=file.name,
+                full_path=str(file.absolute()),
+                size=file.lstat().st_size,
+            )
+            resources.append(resource)
     return resources
 
 
