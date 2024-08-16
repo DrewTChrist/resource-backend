@@ -20,7 +20,7 @@ def get_resources() -> list[models.Resource]:
                 resource_id=resource[0],
                 name=resource[1],
                 path=resource[2],
-                size=resource[3]
+                size=resource[3],
             )
         )
     return resource_list
@@ -37,8 +37,18 @@ def get_resource(resource_id: int) -> Union[models.Resource, None]:
     if not resource:
         return None
     return models.Resource(
-        resource_id=resource[0],
-        name=resource[1],
-        path=resource[2],
-        size=resource[3]
+        resource_id=resource[0], name=resource[1], path=resource[2], size=resource[3]
     )
+
+
+def create_resource(resource: models.Resource):
+    pool = get_connection_pool()
+    connection = pool.getconn()
+    cursor = connection.cursor()
+    cursor.execute(
+        "INSERT INTO resources (name, path, size) VALUES (%s, %s, %s);",
+        (resource.name, resource.path, resource.size),
+    )
+    connection.commit()
+    cursor.close()
+    pool.putconn(connection)

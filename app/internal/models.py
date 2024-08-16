@@ -33,4 +33,3 @@ class Resource(BaseModel):
     name: str
     path: str
     size: int
-
