@@ -29,6 +29,8 @@ class NewUser(User):
 
 
 class Resource(BaseModel):
-    resource_id: int
+    resource_id: Union[int, None] = None
     name: str
     path: str
+    size: int
+

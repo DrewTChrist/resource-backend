@@ -20,6 +20,7 @@ def get_resources() -> list[models.Resource]:
                 resource_id=resource[0],
                 name=resource[1],
                 path=resource[2],
+                size=resource[3]
             )
         )
     return resource_list
@@ -39,4 +40,5 @@ def get_resource(resource_id: int) -> Union[models.Resource, None]:
         resource_id=resource[0],
         name=resource[1],
         path=resource[2],
+        size=resource[3]
     )

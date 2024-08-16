@@ -2,21 +2,14 @@
 # https://testdriven.io/blog/fastapi-and-celery/
 import os
 import pathlib
-from dataclasses import dataclass
 from celery import Celery
 from app.internal import configuration
+from app.internal import models
 
 
 celery_instance = Celery(__name__)
 celery_instance.conf.broker_url = configuration.get_config().celery_broker_url
 celery_instance.conf.result_backend = configuration.get_config().celery_result_backend
-
-
-@dataclass
-class ResourceFile:
-    file_name: str
-    full_path: str
-    size: int
 
 
 def get_file_list(directory: str) -> list[ResourceFile]:
@@ -26,9 +19,9 @@ def get_file_list(directory: str) -> list[ResourceFile]:
         if file.is_dir():
             [resources.append(f) for f in get_file_list(file)]
         else:
-            resource = ResourceFile(
-                file_name=file.name,
-                full_path=str(file.absolute()),
+            resource = models.Resource(
+                name=file.name,
+                path=str(file.absolute()),
                 size=file.lstat().st_size,
             )
             resources.append(resource)
