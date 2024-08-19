@@ -33,3 +33,13 @@ class Resource(BaseModel):
     name: str
     path: str
     size: int
+
+
+class TaskId(BaseModel):
+    task_id: str
+
+
+class TaskResult(BaseModel):
+    task_id: str
+    status: str
+    result: str

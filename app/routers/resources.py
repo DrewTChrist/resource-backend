@@ -2,6 +2,7 @@ import os
 from typing import BinaryIO
 
 import celery
+from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 
@@ -17,6 +18,8 @@ router = APIRouter(
     responses={},
 )
 
+TASK_ID = None
+
 
 def iter_file(file_name: str):
     with open(file_name, "rb") as file:
@@ -25,11 +28,35 @@ def iter_file(file_name: str):
 
 @router.post("/reindex")
 def reindex():
-    try:
-        task = tasks.index_files.delay()
-    except celery.exceptions.OperationalError as e:
-        raise HTTPException(status_code=500, detail="Message queue unavailable") from e
-    return {"task_id": task.id}
+    do_index = True
+    if TASK_ID:
+        task_result = AsyncResult(TASK_ID.task_id)
+        if task_result.ready():
+            TASK_ID = None
+        else:
+            do_index = False
+
+    if do_index:
+        try:
+            task = tasks.index_files.delay()
+        except celery.exceptions.OperationalError as e:
+            raise HTTPException(status_code=500, detail="Message queue unavailable") from e
+        task_id = models.TaskId(task_id=task.id)
+        TASK_ID = task_id
+    else:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    return task_id
+
+
+
+@router.get("/reindex/status")
+def reindex_status(task_id: models.TaskId):
+    task_result = AsyncResult(task_id.task_id)
+    return models.TaskResult(
+        task_id=task_id,
+        task_status=task_result.status,
+        task_result=task_result.result
+    )
 
 
 @router.get("/")
