@@ -1,0 +1,7 @@
+*.md
+vercel.json
+.gitignore
+
+assets/
+scripts/
+.git/
