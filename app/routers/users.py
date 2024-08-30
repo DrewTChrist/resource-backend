@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.internal.db import users
 from app.internal import models
@@ -30,7 +30,7 @@ async def create_user(new_user: models.NewUser):
 
 
 @router.post("/remove")
-async def create_user(
+async def remove_user(
     current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
     user: models.User
 ):
