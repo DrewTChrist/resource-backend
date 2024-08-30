@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.internal.db import users
 from app.internal import models
@@ -22,17 +22,19 @@ async def read_users_me(
 
 
 @router.post(
-    "/create", dependencies=[Depends(security.get_current_admin_user)], status_code=201
+    "/create",
+    dependencies=[Depends(security.get_current_admin_user)],
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_user(new_user: models.NewUser):
     users.create_user(new_user)
     return new_user
 
 
-@router.post("/remove")
+@router.post("/remove", status_code=status.HTTP_200_OK)
 async def remove_user(
     current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
-    user: models.User
+    user: models.User,
 ):
     if current_user.username == user.username:
         raise HTTPException(status_code=403, detail="User cannot delete themselves")
