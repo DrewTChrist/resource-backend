@@ -72,3 +72,16 @@ def create_user(user: models.NewUser):
     connection.commit()
     cursor.close()
     pool.putconn(connection)
+
+
+def remove_user(user: models.User):
+    pool = get_connection_pool()
+    connection = pool.getconn()
+    cursor = connection.cursor()
+    cursor.execute(
+        "DELETE FROM users WHERE id = %s AND username = %s;",
+        (user.user_id, user.username),
+    )
+    connection.commit()
+    cursor.close()
+    pool.putconn(connection)

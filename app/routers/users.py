@@ -27,3 +27,13 @@ async def read_users_me(
 async def create_user(new_user: models.NewUser):
     users.create_user(new_user)
     return new_user
+
+
+@router.post("/remove")
+async def create_user(
+    current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
+    user: models.User
+):
+    if current_user.username == user.username:
+        raise HTTPException(status_code=403, detail="User cannot delete themselves")
+    users.remove_user(user)
