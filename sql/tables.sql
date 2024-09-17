@@ -21,10 +21,12 @@ CREATE TABLE favorites(
   resource_id INT NOT NULL,
   CONSTRAINT fk_user
     FOREIGN KEY(user_id)
-    REFERENCES users(id),
+      REFERENCES users(id)
+      ON DELETE CASCADE,
   CONSTRAINT fk_resource
     FOREIGN KEY(resource_id)
-    REFERENCES resources(id)
+      REFERENCES resources(id)
+      ON DELETE CASCADE
 );
 
 CREATE TABLE metadata_types(
@@ -39,8 +41,10 @@ CREATE TABLE metadata(
   resource_id INT NOT NULL,
   CONSTRAINT fk_metadata_type
     FOREIGN KEY(metadata_type_id)
-    REFERENCES metadata_types(id),
+      REFERENCES metadata_types(id)
+      ON DELETE CASCADE,
   CONSTRAINT fk_resource
     FOREIGN KEY(resource_id)
-    REFERENCES resources(id)
+      REFERENCES resources(id)
+      ON DELETE CASCADE
 );
