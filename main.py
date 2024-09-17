@@ -10,7 +10,7 @@ origins = [
     "https://codespaces-blank-omega.vercel.app/*",
 ]
 
-app = FastAPI()
+app = FastAPI(title="Resource Viewer Backend", version="0.1.0")
 
 app.include_router(users.router)
 app.include_router(resources.router)
