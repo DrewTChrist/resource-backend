@@ -14,3 +14,21 @@ CREATE TABLE resources(
   "path" TEXT NOT NULL,
   "size" INTEGER NOT NULL
 );
+
+CREATE TABLE metadata_types(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE metadata(
+  id SERIAL PRIMARY KEY,
+  value TEXT NOT NULL,
+  metadata_type_id INT NOT NULL,
+  resource_id INT NOT NULL,
+  CONSTRAINT fk_metadata_type
+    FOREIGN KEY(metadata_type_id)
+    REFERENCES metadata_types(id),
+  CONSTRAINT fk_resource
+    FOREIGN KEY(resource_id)
+    REFERENCES resources(id)
+);
