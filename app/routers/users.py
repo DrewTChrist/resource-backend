@@ -31,7 +31,7 @@ async def create_user(new_user: models.NewUser):
     return new_user
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_200_OK)
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_user(
     current_user: Annotated[models.User, Depends(security.get_current_admin_user)],
     user_id: int,
@@ -39,3 +39,4 @@ async def remove_user(
     if current_user.user_id == user_id:
         raise HTTPException(status_code=403, detail="User cannot delete themselves")
     users.remove_user(user_id)
+    return {}
