@@ -2,6 +2,13 @@ name: Test workflow
 
 on: [push]
 
+env:
+  db_url: ''
+  jwt_signature: ''
+  resource_directory: ''
+  celery_broker_url: ''
+  celery_result_backend: ''
+
 jobs:
   test:
     runs-on: ubuntu-latest
