@@ -1,4 +1,4 @@
-from tests import test_client
+from .tests import test_client
 
 
 def test_one():
