@@ -1,3 +1,7 @@
+"""Authentication related routes
+
+There is one authentication endpoint for the application at /api/auth/token.
+"""
 from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -12,6 +16,11 @@ router = APIRouter(prefix="/api/auth", tags=["auth"], dependencies=[], responses
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> models.Token:
+    """"Login" the user
+
+    This route authenticates the user's username and password against the
+    database and returns a jwt access token.
+    """
     user = security.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
