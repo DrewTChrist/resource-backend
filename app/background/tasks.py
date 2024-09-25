@@ -18,7 +18,7 @@ def get_file_list(directory: str) -> list[models.Resource]:
     for file in path.iterdir():
         if file.is_dir():
             # mypy whines that append retuns None, i don't care
-            _ = [resource_list.append(f) for f in get_file_list(file)] # type: ignore
+            _ = [resource_list.append(f) for f in get_file_list(file)]  # type: ignore
         else:
             resource = models.Resource(
                 name=file.name,
