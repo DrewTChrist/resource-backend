@@ -2,7 +2,6 @@ from typing import Union
 
 from app.internal.db import get_connection_pool
 from app.internal import models
-from app.internal import hashing
 
 
 def get_resources() -> list[models.Resource]:

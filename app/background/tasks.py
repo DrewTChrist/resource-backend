@@ -1,6 +1,5 @@
 # Decent blog post with celery example to handle background process
 # https://testdriven.io/blog/fastapi-and-celery/
-import os
 import pathlib
 from celery import Celery
 from app.internal import configuration
@@ -15,18 +14,18 @@ celery_instance.conf.result_backend = configuration.get_config().celery_result_b
 
 def get_file_list(directory: str) -> list[models.Resource]:
     path = pathlib.Path(directory)
-    resources = []
+    resource_list = []
     for file in path.iterdir():
         if file.is_dir():
-            [resources.append(f) for f in get_file_list(file)]
+            _ = [resource_list.append(f) for f in get_file_list(file)]
         else:
             resource = models.Resource(
                 name=file.name,
                 path=str(file.absolute()),
                 size=file.lstat().st_size,
             )
-            resources.append(resource)
-    return resources
+            resource_list.append(resource)
+    return resource_list
 
 
 @celery_instance.task(name="index_files")
