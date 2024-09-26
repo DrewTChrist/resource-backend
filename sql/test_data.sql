@@ -7,10 +7,10 @@ INSERT INTO users (
     disabled, 
     administrator
 ) VALUES (
-    "admin", 
-    "admin", 
-    "admin", 
-    "$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e", --- "admin"
+    'admin',
+    'admin',
+    'admin',
+    '$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e', --- "admin"
     false, 
     true
 );
@@ -24,10 +24,10 @@ INSERT INTO users (
     disabled, 
     administrator
 ) VALUES (
-    "disabled", 
-    "disabled", 
-    "disabled", 
-    "$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e", --- "admin"
+    'disabled',
+    'disabled',
+    'disabled',
+    '$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e', --- "admin"
     true, 
     false
 );
@@ -41,10 +41,10 @@ INSERT INTO users (
     disabled, 
     administrator
 ) VALUES (
-    "user", 
-    "user", 
-    "user", 
-    "$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e", --- "admin"
+    'user',
+    'user',
+    'user',
+    '$2b$12$ta.KupNchm/CPN8Op9mY5.uai237aSMbc8jft3z..6zWiEOUb3f3e', --- "admin"
     false, 
     false
 );
