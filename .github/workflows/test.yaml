@@ -3,7 +3,7 @@ name: Test workflow
 on: [push]
 
 env:
-  db_url: ''
+  db_url: 'postgresql://postgres:postgres@postgres:5432/postgres'
   jwt_signature: ''
   resource_directory: ''
   celery_broker_url: ''
@@ -12,18 +12,46 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: python:3.10-slim-bookworm
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: postgres
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10.x'
-          cache: 'pip'
+
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.10.x'
+
+      - name: Install psql
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Create test data
+        run: |
+          psql -d postgresql://postgres:postgres@postgres:5432/postgres -f sql/tables.sql
+          psql -d postgresql://postgres:postgres@postgres:5432/postgres -f sql/test_data.sql
+
+      # - name: Create table
+      #   run: python scripts/create_table.py
 
       - name: Run tests
         run: |
