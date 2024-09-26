@@ -46,7 +46,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Create test data
-        run: psql -d postgresql://postgres:postgres@postgres:5432/postgres -f scripts/create_table.sql
+        run: |
+          psql -d postgresql://postgres:postgres@postgres:5432/postgres -f sql/tables.sql
+          psql -d postgresql://postgres:postgres@postgres:5432/postgres -f sql/test_data.sql
 
       # - name: Create table
       #   run: python scripts/create_table.py
