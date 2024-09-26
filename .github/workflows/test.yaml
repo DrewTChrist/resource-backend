@@ -12,6 +12,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: python:3.10-bookworm-slim
 
     services:
       postgres:
