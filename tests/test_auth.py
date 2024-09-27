@@ -6,7 +6,6 @@ client = TestClient(app)
 
 
 def test_auth_route():
-    data = None
     response = client.post(
         "/api/auth/token",
         headers={"Content-Type": "application/x-www-form-urlencoded"},
@@ -15,3 +14,14 @@ def test_auth_route():
     json = response.json()
     assert "access_token" in json
     assert "token_type" in json
+
+
+def test_auth_route_failure():
+    response = client.post(
+        "/api/auth/token",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data={"username": "admin", "password": "badpassword"},
+    )
+    json = response.json()
+    assert response.status_code == 401
+    assert json == {"detail": "Incorrect username or password"}
