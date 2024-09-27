@@ -48,5 +48,3 @@ INSERT INTO users (
     false, 
     false
 );
-
-COMMIT;
