@@ -21,7 +21,7 @@ def test_get_current_user():
     )
     json = response.json()
     assert json == {
-        "user_id": 0,
+        "user_id": 1,
         "first_name": "admin",
         "last_name": "admin",
         "username": "admin",
