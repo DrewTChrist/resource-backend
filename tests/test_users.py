@@ -1,3 +1,11 @@
+"""Tests for user related routes
+
+Three users are added for testing. See sql/test_data.sql.
+
+usernames: admin, disabled, user
+password: admin
+"""
+
 from fastapi.testclient import TestClient
 
 from main import app
@@ -42,7 +50,7 @@ def test_get_users_failure():
     This test expects a failure from the endpoint. Regular users
     will receive an error.
     """
-    access_token = authenticate("user", "user")
+    access_token = authenticate("user", "admin")
     response = client.get(
         "/api/users/", headers={"Authorization": f"Bearer {access_token}"}
     )
