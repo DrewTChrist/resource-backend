@@ -3,6 +3,7 @@
 This module holds the routes for managing users of the application and other
 tightly coupled data (e.g. favorites).
 """
+
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -57,7 +58,7 @@ async def remove_user(
     """Remove a user from the database
 
     Returns an empty reponse and will throw an error if a user tries to remove
-    themselves from the database. This endpoint is only accessible to 
+    themselves from the database. This endpoint is only accessible to
     administrators.
     """
     if current_user.user_id == user_id:
